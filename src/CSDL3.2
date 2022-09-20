@@ -1,0 +1,45 @@
+create database QuanLySinhVien;
+use QuanLySinhVien;
+create table Class (
+	ClassID int not null auto_increment primary key,
+    ClassName varchar(255) not null,
+    StartDate datetime not null,
+    Startus bit
+);
+create table Student (
+	StudentID int not null auto_increment primary key,
+    StudentName varchar(255) not null,
+    Address varchar(255),
+    Phone varchar(255),
+    Status bit,
+    ClassID int not null,
+    foreign key (ClassID) references Class(ClassID)
+);
+create table Subject (
+	SubID int not null auto_increment primary key,
+    SubName varchar(255) not null,
+    Credit tinyint not null default 1 check (Credit >= 1),
+    Status bit default 1
+);
+create table Mark (
+	MarkID int not null auto_increment primary key,
+    SubID int not null,
+    StudentID int not null,
+    Mark float default 0 check (Mark between 0 and 100),
+    ExamTimes tinyint default 1,
+    unique (SubID, StudentID),
+    foreign key (SubID) references Subject (SubID),
+    foreign key (StudentID) references Student (StudentID)
+);
+select * from Student;
+select *
+from Student where Status = true;
+select * from Subject where Credit < 10;
+select S.StudentID, S.StudentName, C.ClassName
+from Student S join Class C on S.ClassID = C.ClassID;
+select S.StudentID, S.StudentName, C.ClassName
+from Student S join Class C on S.ClassID = C.ClassID
+where C.ClassName = 'A1';
+select S.StudentId, S.StudentName, Sub.SubName, M.Mark
+from Student S join Mark M on S.StudentId = M.StudentId join Subject Sub on M.SubID = Sub.SubID
+where Sub.SubName = 'CF';
